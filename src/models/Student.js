@@ -96,6 +96,20 @@ const Student = sequelize.define('Student', {
         field: 'eighth_lesson_date',
         comment: 'Date when the student attends the 8th lesson',
     },
+    entrant_student: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        field: 'entrant_student',
+        comment: 'Flag indicating if the student is an entrant student',
+    },
+    from_abroad_student: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        field: 'from_abroad_student',
+        comment: 'Flag indicating if the student is from abroad',
+    }
 }, {
     timestamps: true,
     tableName: 'students',

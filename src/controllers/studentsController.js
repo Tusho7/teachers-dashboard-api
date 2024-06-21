@@ -20,6 +20,48 @@ export const getStudents = async (_, res) => {
   }
 };
 
+
+export const getEntrantStudents = async (_, res) => {
+  try {
+    const entrantStudents = await Student.findAll({
+      where: { entrant_student: true }
+    });
+
+    const formattedStudents = entrantStudents.map(student => ({
+      ...student.toJSON(),
+      start_date: student.start_date.toISOString().split('T')[0],
+      payment_date: student.payment_date?.toISOString().split('T')[0] || null,
+      next_payment_date: student.next_payment_date?.toISOString().split('T')[0] || null,
+      eighth_lesson_date: student.eighth_lesson_date?.toISOString().split('T')[0] || null,
+    }));
+
+    res.status(200).json(formattedStudents);
+  } catch (error) {
+    console.error("Error fetching entrant students:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const fromAboadStudents = async (_, res) => {
+  try {
+    const abroadStudents = await Student.findAll({
+      where: { from_abroad_student: true }
+    });
+
+    const formattedStudents = abroadStudents.map(student => ({
+      ...student.toJSON(),
+      start_date: student.start_date.toISOString().split('T')[0],
+      payment_date: student.payment_date?.toISOString().split('T')[0] || null,
+      next_payment_date: student.next_payment_date?.toISOString().split('T')[0] || null,
+      eighth_lesson_date: student.eighth_lesson_date?.toISOString().split('T')[0] || null,
+    }));
+    res.status(200).json(formattedStudents);
+  } catch (error) {
+    console.error("Error fetching abroad students:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 export const add_student = async (req, res) => {
   try {
     const {
@@ -33,7 +75,9 @@ export const add_student = async (req, res) => {
       days_per_week,
       days_of_week,
       hours_of_days,
-      payment_date
+      payment_date,
+      entrant_student,
+      from_abroad_student
     } = req.body;
 
     if (!days_of_week) {
@@ -74,6 +118,8 @@ export const add_student = async (req, res) => {
       payment_date: calculatedPaymentDate,
       next_payment_date: calculateNextPaymentDate(start_date, days_per_week, days_of_week),
       eighth_lesson_date: calculateEighthLessonDate(start_date, days_per_week, days_of_week),
+      entrant_student,
+      from_abroad_student,
     });
 
     const formattedStudent = {
