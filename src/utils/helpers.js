@@ -47,4 +47,10 @@ const calculateEighthLessonDate = (start_date, _, days_of_week) => {
   return currentDate;
 };
 
-export { calculateEighthLessonDate, calculateNextPaymentDate }
+const isValidCurrency = (currency) => {
+  const validCurrencies = ['GEL', 'USD', 'EUR']; 
+  const normalizedCurrency = currency.toUpperCase(); 
+  return validCurrencies.includes(normalizedCurrency);
+};
+
+export { calculateEighthLessonDate, calculateNextPaymentDate, isValidCurrency }

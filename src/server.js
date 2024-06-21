@@ -6,6 +6,7 @@ import sequelize from "./config/database.js";
 import userRoutes from "./routes/userRoutes.js";
 import studentsRoutes from "./routes/studentsRoutes.js";
 import cookieParser from "cookie-parser";
+import { getMonthlyRevenue } from "./controllers/monthlyRevenue.js";
 
 const app = express();
 dotenv.config();
@@ -28,7 +29,7 @@ sequelize
 
 app.use("/api/auth", userRoutes);
 app.use("/", studentsRoutes);
-
+app.use("/", getMonthlyRevenue)
 
 
 

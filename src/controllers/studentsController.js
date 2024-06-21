@@ -1,5 +1,5 @@
 import Student from "../models/Student.js";
-import { calculateNextPaymentDate, calculateEighthLessonDate } from "../utils/helpers.js";
+import { calculateNextPaymentDate, calculateEighthLessonDate, isValidCurrency } from "../utils/helpers.js";
 
 export const getStudents = async (_, res) => {
   try {
@@ -99,8 +99,13 @@ export const add_student = async (req, res) => {
       hours_of_days,
       payment_date,
       entrant_student,
-      from_abroad_student
+      from_abroad_student,
+      currency
     } = req.body;
+
+    if(!isValidCurrency(currency)) {
+      return res.status(400).json({ message: "Invalid currency. Please choose one of: GEL, USD, EUR" });
+    }
 
     if (!days_of_week) {
       return res.status(400).json({ message: "Days of week must be provided" });
@@ -142,6 +147,7 @@ export const add_student = async (req, res) => {
       eighth_lesson_date: calculateEighthLessonDate(start_date, days_per_week, days_of_week),
       entrant_student,
       from_abroad_student,
+      currency
     });
 
     const formattedStudent = {

@@ -46,6 +46,13 @@ const Student = sequelize.define('Student', {
         field: 'how_much_pays',
         comment: 'Amount the student pays (e.g., fees)',
     },
+    currency: {
+        type: DataTypes.ENUM('GEL', 'USD', 'EUR'),
+        allowNull: false,
+        defaultValue: 'GEL',
+        field: 'currency',
+        comment: 'Currency the student pays in',
+    },
     payment_status: {
         type: DataTypes.ENUM('გადახდილი', 'გადაუხდელი'),
         defaultValue: 'გადაუხდელი',
