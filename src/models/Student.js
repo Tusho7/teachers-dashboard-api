@@ -84,6 +84,12 @@ const Student = sequelize.define('Student', {
         field: 'days_of_week',
         comment: 'Days of the week the student attends (e.g., "Monday,Wednesday,Friday")',
     },
+    hours_of_days: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        field: 'hours_of_days',
+        comment: 'Hours of the days the student attends lessons (e.g., {"ორშაბათი": "15:00", "ხუთშაბათი": "20:00"})',
+    },
     eighth_lesson_date: {
         type: DataTypes.DATE,
         allowNull: true,

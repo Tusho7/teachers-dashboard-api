@@ -32,6 +32,7 @@ export const add_student = async (req, res) => {
       payment_status,
       days_per_week,
       days_of_week,
+      hours_of_days,
       payment_date
     } = req.body;
 
@@ -42,6 +43,15 @@ export const add_student = async (req, res) => {
     if (payment_status === "გადახდილი" && !payment_date) {
       return res.status(400).json({ message: "გთხოვთ შეიყვანოთ გადახდის თარიღი 'გადახდილი'" });
     }
+
+    if (!hours_of_days || hours_of_days.length !== days_of_week.split(',').length) {
+      return res.status(400).json({ message: "დღეები და საათები არ ემთხვევა, აცდენაა :))" });
+    }
+
+    const mappedHoursOfDays = days_of_week.split(',').reduce((acc, day, index) => {
+      acc[day.trim()] = hours_of_days[index];
+      return acc;
+    }, {});
 
     const calculatedPaymentDate = payment_date ? new Date(payment_date) : new Date(start_date);
     console.log(payment_date);
@@ -57,6 +67,7 @@ export const add_student = async (req, res) => {
       payment_status: payment_status || 'გადაუხდელი',
       days_per_week,
       days_of_week,
+      hours_of_days: mappedHoursOfDays,
       payment_date: calculatedPaymentDate,
       next_payment_date: calculateNextPaymentDate(start_date, days_per_week, days_of_week),
       eighth_lesson_date: calculateEighthLessonDate(start_date, days_per_week, days_of_week),
@@ -90,6 +101,7 @@ export const update_student = async (req, res) => {
     days_per_week,
     attendance_count,
     days_of_week,
+    hours_of_days,
   } = req.body;
 
   try {
@@ -125,6 +137,10 @@ export const update_student = async (req, res) => {
 
     if (days_of_week !== undefined) {
       student.days_of_week = days_of_week;
+    }
+
+    if (hours_of_days !== undefined) {
+      student.hours_of_days = hours_of_days;
     }
 
     await student.save();
