@@ -41,7 +41,11 @@ export const add_student = async (req, res) => {
     }
 
     if (payment_status === "გადახდილი" && !payment_date) {
-      return res.status(400).json({ message: "გთხოვთ შეიყვანოთ გადახდის თარიღი 'გადახდილი'" });
+      return res.status(400).json({ message: "გთხოვთ შეიყვანოთ გადახდის თარიღი რადგან მონიშნეთ - 'გადახდილი'" });
+    }
+
+    if (payment_status === "გადაუხდელი" && payment_date) {
+      return res.status(400).json({ message: "გთოხვთ მონიშნოთ თუ გადახდილია" });
     }
 
     if (!hours_of_days || hours_of_days.length !== days_of_week.split(',').length) {
@@ -54,7 +58,6 @@ export const add_student = async (req, res) => {
     }, {});
 
     const calculatedPaymentDate = payment_date ? new Date(payment_date) : new Date(start_date);
-    console.log(payment_date);
 
 
     const newStudent = await Student.create({
