@@ -62,6 +62,28 @@ export const fromAboadStudents = async (_, res) => {
   }
 }
 
+export const getStudentsByPaymentStatus = async (req, res) => {
+  const { status } = req.params;
+  try {
+    const students = await Student.findAll({
+      where: { payment_status: status }
+    });
+
+    const formattedStudents = students.map(student => ({
+      ...student.toJSON(),
+      start_date: student.start_date.toISOString().split('T')[0],
+      payment_date: student.payment_date?.toISOString().split('T')[0] || null,
+      next_payment_date: student.next_payment_date?.toISOString().split('T')[0] || null,
+      eighth_lesson_date: student.eighth_lesson_date?.toISOString().split('T')[0] || null,
+    }));
+
+    res.status(200).json(formattedStudents);
+  } catch (error) {
+    console.error(`Error fetching students with payment status ${status}:`, error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const add_student = async (req, res) => {
   try {
     const {
