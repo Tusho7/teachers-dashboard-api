@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import sequelize from "./config/database.js";
 
 import userRoutes from "./routes/userRoutes.js";
+import studentsRoutes from "./routes/studentsRoutes.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -26,6 +27,7 @@ sequelize
 
 
 app.use("/api/auth", userRoutes);
+app.use("/", studentsRoutes);
 
 
 
