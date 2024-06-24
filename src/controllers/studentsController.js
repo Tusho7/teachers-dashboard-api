@@ -227,6 +227,7 @@ export const update_student = async (req, res) => {
     days_of_week,
     hours_of_days,
     payment_date,
+    currency
   } = req.body;
 
   try {
@@ -291,6 +292,7 @@ export const update_student = async (req, res) => {
     student.phone_number = phone_number || student.phone_number;
     student.facebook_profile = facebook_profile || student.facebook_profile;
     student.how_much_pays = how_much_pays || student.how_much_pays;
+    student.currency = currency || student.currency;
 
     if (attendance_count !== undefined) {
       student.attendance_count = attendance_count;
