@@ -1,4 +1,4 @@
-const calculateNextPaymentDate = (start_date, _, days_of_week) => {
+const calculateNextPaymentDate = (start_date, days_per_week, days_of_week) => {
   const startDate = new Date(start_date);
   const daysOfWeek = days_of_week.split(",").map((day) => day.trim());
 

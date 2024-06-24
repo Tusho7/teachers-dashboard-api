@@ -274,6 +274,7 @@ export const update_student = async (req, res) => {
       const nextPaymentDate =  calculateNextPaymentDate(
         start_date,
         days_per_week,
+        days_of_week,
         daysOfWeekArray
       )
 
