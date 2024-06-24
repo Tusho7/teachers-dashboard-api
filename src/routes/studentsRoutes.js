@@ -5,6 +5,7 @@ import {
   getEntrantStudents,
   fromAboadStudents,
   getStudentsByPaymentStatus,
+  update_student
 } from "../controllers/studentsController.js";
 
 const router = express.Router();
@@ -14,5 +15,6 @@ router.get("/entrant_students", getEntrantStudents);
 router.get("/abroad_students", fromAboadStudents);
 router.get("/get_students/payment_status/:status", getStudentsByPaymentStatus);
 router.post("/add_student", add_student);
+router.put("/update_student/:studentId", update_student);
 
 export default router;
