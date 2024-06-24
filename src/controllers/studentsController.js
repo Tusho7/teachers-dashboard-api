@@ -313,6 +313,16 @@ export const update_student = async (req, res) => {
   }
 };
 
+export const total_students = async (_,res) => {
+  try {
+    const totalStudents = await Student.count();
+    res.status(200).json(totalStudents);
+  } catch (error) {
+    console.error("Error fetching total students:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 
 
 
