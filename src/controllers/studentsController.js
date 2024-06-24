@@ -144,11 +144,15 @@ export const add_student = async (req, res) => {
 
     if (
       !hours_of_days ||
-      hours_of_days.length !== days_of_week.split(",").length
+      hours_of_days.length !== days_of_week.split(",").length 
     ) {
       return res
         .status(400)
         .json({ message: "დღეები და საათები არ ემთხვევა, აცდენაა :))" });
+    }
+
+    if(days_per_week !== days_of_week.split(",").length) {
+      return res.status(400).json({ message: "დღეები და კვირაში დღეები არ ემთხვევა, აცდენაა :))" });
     }
 
     const mappedHoursOfDays = days_of_week
