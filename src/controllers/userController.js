@@ -56,6 +56,7 @@ export const loginUser = async (req, res) => {
       httpOnly: true,
       maxAge: 3600000,
       secure: true,
+      sameSite: "strict",
     });
 
     res.status(200).json({ id: user.id });
