@@ -12,9 +12,9 @@ export const getStudents = async (_, res) => {
     const formattedStudents = students.map((student) => ({
       ...student.toJSON(),
       start_date: student.start_date.toISOString().split("T")[0],
-      payment_date: student.payment_date.toISOString().split("T")[0],
-      next_payment_date: student.next_payment_date.toISOString().split("T")[0],
-      eighth_lesson_date: student.eighth_lesson_date
+      payment_date: student.payment_date && student.payment_date.toISOString().split("T")[0],
+      next_payment_date: student.next_payment_date && student.next_payment_date.toISOString().split("T")[0],
+      eighth_lesson_date: student.eighth_lesson_date && student.eighth_lesson_date
         .toISOString()
         .split("T")[0],
     }));
@@ -161,10 +161,9 @@ export const add_student = async (req, res) => {
         acc[day.trim()] = hours_of_days[index];
         return acc;
       }, {});
+      
+      const calculatedPaymentDate = payment_date ? new Date(payment_date) : null;
 
-    const calculatedPaymentDate = payment_date
-      ? new Date(payment_date)
-      : new Date(start_date);
 
     const newStudent = await Student.create({
       first_name,
@@ -193,14 +192,15 @@ export const add_student = async (req, res) => {
       currency,
     });
 
+
     const formattedStudent = {
       ...newStudent.toJSON(),
-      start_date: newStudent.start_date.toISOString().split("T")[0],
-      payment_date: newStudent.payment_date.toISOString().split("T")[0],
-      next_payment_date: newStudent.next_payment_date
+      start_date: newStudent.start_date && newStudent.start_date.toISOString().split("T")[0],
+      payment_date: newStudent.payment_date && newStudent.payment_date.toISOString().split("T")[0],
+      next_payment_date: newStudent.next_payment_date && newStudent.next_payment_date
         .toISOString()
         .split("T")[0],
-      eighth_lesson_date: newStudent.eighth_lesson_date
+      eighth_lesson_date: newStudent.eighth_lesson_date && newStudent.eighth_lesson_date
         .toISOString()
         .split("T")[0],
     };

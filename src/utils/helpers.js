@@ -49,7 +49,7 @@ const calculateEighthLessonDate = (start_date, _, days_of_week) => {
 
 const isValidCurrency = (currency) => {
   const validCurrencies = ['GEL', 'USD', 'EUR']; 
-  const normalizedCurrency = currency.toUpperCase(); 
+  const normalizedCurrency = currency && currency.toUpperCase(); 
   return validCurrencies.includes(normalizedCurrency);
 };
 
