@@ -3,6 +3,6 @@ import { getMonthlyRevenue } from '../controllers/studentsController.js';
 
 const router = express.Router();
 
-router.get('/monthly-revenue', getMonthlyRevenue);
+router.get('/monthly-revenue', authMiddleware, getMonthlyRevenue);
 
 export default router;

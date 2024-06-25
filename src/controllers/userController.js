@@ -56,12 +56,21 @@ export const loginUser = async (req, res) => {
       httpOnly: true,
       maxAge: 3600000,
       secure: true,
-      sameSite: "strict",
     });
 
     res.status(200).json({ id: user.id });
   } catch (error) {
     console.error("Error logging in admin:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error getting user:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
