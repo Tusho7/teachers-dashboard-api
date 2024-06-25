@@ -67,7 +67,7 @@ export const loginUser = async (req, res) => {
 
 export const getUser = async (req, res) => {
   try {
-    const user = await User.findById(req.userId);
+    const user = await User.findByPk(req.userId);
     res.status(200).json(user);
   } catch (error) {
     console.error("Error getting user:", error);
