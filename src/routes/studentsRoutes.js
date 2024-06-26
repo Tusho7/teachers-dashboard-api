@@ -17,7 +17,7 @@ router.get("/entrant_students", authMiddleware, getEntrantStudents);
 router.get("/abroad_students", authMiddleware, fromAboadStudents);
 router.get("/get_students/payment_status/:status", authMiddleware, getStudentsByPaymentStatus);
 router.get("/total_students", authMiddleware, total_students);
-router.post("/add_student", authMiddleware, add_student);
+router.post("/add_student",  add_student);
 router.put("/update_student/:studentId", authMiddleware, update_student);
 
 export default router;

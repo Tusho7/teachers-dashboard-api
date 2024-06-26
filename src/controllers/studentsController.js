@@ -4,6 +4,8 @@ import {
   calculateEighthLessonDate,
   isValidCurrency,
 } from "../utils/helpers.js";
+import wsServer from "../utils/notification.js";
+import { WebSocket } from "ws";
 
 export const getStudents = async (_, res) => {
   try {
@@ -298,6 +300,18 @@ export const update_student = async (req, res) => {
       student.attendance_count = attendance_count;
     }
 
+    wsServer.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        const notification = JSON.stringify({
+          message: `${student.first_name} ${student.last_name} (Student ID: ${studentId}) აქვს 8 დასწრება, გთხოვთ განაახლოთ ახალი თვის დაწყების თარიღი!`,
+          studentId,
+          attendance_count
+        });
+        client.send(notification);
+      }
+    });
+    
+
     await student.save();
 
     const formattedStudent = {
@@ -324,7 +338,3 @@ export const total_students = async (_,res) => {
     res.status(500).json({ message: "Server error" });
   }
 }
-
-
-
-
