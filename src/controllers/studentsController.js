@@ -338,3 +338,20 @@ export const total_students = async (_,res) => {
     res.status(500).json({ message: "Server error" });
   }
 }
+
+
+export const delete_student = async (req,res) => {
+  const { studentId } = req.params;
+  try {
+    const student = await Student.findByPk(studentId);
+    if(!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    await student.destroy();
+    res.status(200).json({ message: "Student deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+} 

@@ -1,6 +1,6 @@
 import express from "express";
 import { registerUser, loginUser, getUser, logoutUser, updateUser } from "../controllers/userController.js";
-import { middleware } from "../middlewares/auth.js";
+import authMiddleware, { middleware } from "../middlewares/auth.js";
 
 const router = express.Router();
 
@@ -10,8 +10,8 @@ router.post("/login", loginUser)
 
 router.get("/get_user", middleware, getUser)
 
-router.post("/logout", logoutUser)
+router.post("/logout", authMiddleware, logoutUser)
 
-router.put("/:id", updateUser);
+router.put("/:id", authMiddleware, updateUser);
 
 export default router;

@@ -6,7 +6,8 @@ import {
   fromAboadStudents,
   getStudentsByPaymentStatus,
   update_student,
-  total_students
+  total_students,
+  delete_student
 } from "../controllers/studentsController.js";
 import authMiddleware from "../middlewares/auth.js";
 
@@ -19,5 +20,6 @@ router.get("/get_students/payment_status/:status", authMiddleware, getStudentsBy
 router.get("/total_students", authMiddleware, total_students);
 router.post("/add_student", authMiddleware,  add_student);
 router.put("/update_student/:studentId", authMiddleware, update_student);
+router.delete("/students/:studentId", authMiddleware, delete_student);
 
 export default router;
