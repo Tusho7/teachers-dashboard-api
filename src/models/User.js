@@ -16,8 +16,16 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  first_name: {
+    type: DataTypes.STRING,
+    allowNull: true, 
+  },
+  last_name: {
+    type: DataTypes.STRING,
+    allowNull: true, 
+  },
 }, {
-  timestamps: true,
+  timestamps: false,
   tableName: 'users',
 });
 
