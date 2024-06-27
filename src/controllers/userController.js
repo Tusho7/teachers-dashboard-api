@@ -6,7 +6,7 @@ export const registerUser = async (req, res) => {
   const { email, password, first_name, last_name } = req.body;
 
   try {
-    const userExists = await User.findOne({ email });
+    const userExists = await User.findOne({ where: { email } });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -92,3 +92,40 @@ export const logoutUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const updateUser = async (req,res) => {
+  const { id } = req.params;
+  const { email, password, first_name, last_name } = req.body;
+
+  try {
+    let user = await User.findByPk(id);
+
+    if(!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if(email) {
+      user.email = email;
+    }
+
+    if(first_name){
+      user.first_name = first_name;
+    }
+
+    if(last_name){
+      user.last_name = last_name;
+    }
+
+    if(password){
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.password = hashedPassword;
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: "User updated successfully" });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
