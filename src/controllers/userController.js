@@ -1,11 +1,15 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import sendVerificationEmail from "../utils/emailVerification.js";
+import sendVerificationEmail, { sendEmail } from "../utils/emailVerification.js";
 import { v4 as uuidv4 } from 'uuid'
 
 const generateUniqueCode = () => {
   return uuidv4();
+}
+
+const generateNewPssword = () => {
+  return Math.random().toString(36).slice(-8);
 }
 
 export const registerUser = async (req, res) => {
@@ -168,3 +172,30 @@ export const verifyUser = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { email } });
+
+    if(!user){ 
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const newPassword = generateNewPssword();
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+
+    await user.save();
+
+    await sendEmail(email, "Password reset", `Your new password is: ${newPassword}`);
+
+    return res.status(200).json({ message: "Password reset successfully. Check your email for the new password." });
+  } catch(error) {
+    console.error("Error resetting password:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+
+}
