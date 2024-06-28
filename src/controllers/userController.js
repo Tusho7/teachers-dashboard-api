@@ -123,7 +123,15 @@ export const updateUser = async (req,res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if(email) {
+    if(email && email !== user.email) {
+      
+      const verificationCode = generateUniqueCode();
+      await sendVerificationEmail(email, verificationCode);
+      
+      user.email = email;
+      user.verificationCode = verificationCode;
+      user.isVerified = false;
+    } else if (email && email !== user.email && user.isVerified) {
       user.email = email;
     }
 
