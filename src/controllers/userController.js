@@ -1,6 +1,12 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import sendVerificationEmail from "../utils/emailVerification.js";
+import { v4 as uuidv4 } from 'uuid'
+
+const generateUniqueCode = () => {
+  return uuidv4();
+}
 
 export const registerUser = async (req, res) => {
   const { email, password, first_name, last_name } = req.body;
@@ -13,14 +19,19 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const verificationCode = generateUniqueCode();
+
     const newUser = new User({
       email,
       password: hashedPassword,
       first_name,
       last_name,
+      verificationCode,
     });
 
     await newUser.save();
+
+    await sendVerificationEmail(email, verificationCode);
 
     res.status(201).json({ message: "User created successfully" });
   } catch (error) {
@@ -30,29 +41,25 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, verificationCode } = req.body;
 
   try {
     const user = await User.findOne({ where: { email } });
 
-    if (!user) {
-      return res.status(401).json({ message: "Email not found" });
+    if (!user || !user.isVerified) {
+      return res.status(401).json({ message: 'User not found or not verified' });
     }
 
-    if (!email || !password) {
-      return res.status(404).json({ message: "Enter all required fields!" });
-    }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign(
+      const token = jwt.sign(
       { email: user.email, id: user.id },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -61,15 +68,23 @@ export const loginUser = async (req, res) => {
     });
 
     res.status(200).json({ id: user.id });
+
   } catch (error) {
-    console.error("Error logging in admin:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Error logging in user:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
+
 export const getUser = async (req, res) => {
   try {
-    const user = await User.findByPk(req.userId);
+    const userId = req.user.id;
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     res.status(200).json(user);
   } catch (error) {
     console.error("Error getting user:", error);
@@ -129,3 +144,27 @@ export const updateUser = async (req,res) => {
     res.status(500).json({ message: "Server error" });
   }
 }
+
+export const verifyUser = async (req, res) => {
+  const { email, verificationCode } = req.query;
+
+  try {
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (verificationCode !== user.verificationCode) {
+      return res.status(400).json({ message: 'Invalid verification code' });
+    }
+
+    user.isVerified = true;
+    await user.save();
+
+    res.status(200).json({ message: 'User verified successfully' });
+  } catch (error) {
+    console.error('Error verifying user:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

@@ -6,7 +6,6 @@ wsServer.on('connection', (ws) => {
   console.log('WebSocket client connected');
 
   ws.on('message', (message) => {
-    console.log('Message from client:', message);
     ws.send(`Server received: ${message}`);
   });
 

@@ -18,9 +18,17 @@ const User = sequelize.define('User', {
   },
   first_name: {
     type: DataTypes.STRING,
-    allowNull: true, 
+    allowNull: true,
   },
   last_name: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  isVerified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  verificationCode: {
     type: DataTypes.STRING,
     allowNull: true, 
   },
