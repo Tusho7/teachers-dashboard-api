@@ -116,6 +116,16 @@ const Student = sequelize.define('Student', {
         defaultValue: false,
         field: 'from_abroad_student',
         comment: 'Flag indicating if the student is from abroad',
+    },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'users',
+            key: 'id',
+        },
+        field: 'user_id',
+        comment: 'Unique identifier for the user associated with the student',
     }
 }, {
     timestamps: true,

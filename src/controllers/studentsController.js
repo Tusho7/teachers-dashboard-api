@@ -28,6 +28,31 @@ export const getStudents = async (_, res) => {
   }
 };
 
+export const getStudentById = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+      const student = await Student.findAll({ where: {userId: userId} });
+      if (!student) {
+          return res.status(404).json({ error: 'Student not found' });
+      }
+
+      const formattedStudents = student.map((student) => ({
+        ...student.toJSON(),
+        start_date: student.start_date.toISOString().split("T")[0],
+        payment_date: student.payment_date && student.payment_date.toISOString().split("T")[0],
+        next_payment_date: student.next_payment_date && student.next_payment_date.toISOString().split("T")[0],
+        eighth_lesson_date: student.eighth_lesson_date && student.eighth_lesson_date
+          .toISOString()
+          .split("T")[0],
+      }));
+  
+      res.status(200).json(formattedStudents);
+  } catch (error) {
+      console.error(`Error fetching student for user ID ${userId}:`, error);
+      res.status(500).json({ error: `Error fetching student for user ID ${userId}` });
+  }
+};
+
 export const getEntrantStudents = async (_, res) => {
   try {
     const entrantStudents = await Student.findAll({
@@ -51,6 +76,30 @@ export const getEntrantStudents = async (_, res) => {
   }
 };
 
+export const getEntrantStudentsById = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const entrantStudents = await Student.findAll({
+      where: { entrant_student: true, userId: userId },
+    });
+
+    const formattedStudents = entrantStudents.map((student) => ({
+      ...student.toJSON(),
+      start_date: student.start_date.toISOString().split("T")[0],
+      payment_date: student.payment_date?.toISOString().split("T")[0] || null,
+      next_payment_date:
+        student.next_payment_date?.toISOString().split("T")[0] || null,
+      eighth_lesson_date:
+        student.eighth_lesson_date?.toISOString().split("T")[0] || null,
+    }));
+
+    res.status(200).json(formattedStudents);
+  } catch (error) {
+    console.error("Error fetching entrant students:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 export const fromAboadStudents = async (_, res) => {
   try {
     const abroadStudents = await Student.findAll({
@@ -72,6 +121,30 @@ export const fromAboadStudents = async (_, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const fromAboadStudentsById = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const abroadStudents = await Student.findAll({
+      where: { from_abroad_student: true, userId: userId },
+    });
+
+    const formattedStudents = abroadStudents.map((student) => ({
+      ...student.toJSON(),
+      start_date: student.start_date.toISOString().split("T")[0],
+      payment_date: student.payment_date?.toISOString().split("T")[0] || null,
+      next_payment_date:
+        student.next_payment_date?.toISOString().split("T")[0] || null,
+      eighth_lesson_date:
+        student.eighth_lesson_date?.toISOString().split("T")[0] || null,
+    }));
+
+    res.status(200).json(formattedStudents);
+  } catch (error) {
+    console.error("Error fetching entrant students:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
 
 export const getStudentsByPaymentStatus = async (req, res) => {
   const { status } = req.params;
@@ -103,6 +176,7 @@ export const getStudentsByPaymentStatus = async (req, res) => {
 export const add_student = async (req, res) => {
   try {
     const {
+      userId,
       first_name,
       last_name,
       start_date,
@@ -168,6 +242,7 @@ export const add_student = async (req, res) => {
 
 
     const newStudent = await Student.create({
+      userId,
       first_name,
       last_name,
       start_date,
@@ -336,6 +411,17 @@ export const total_students = async (_,res) => {
   } catch (error) {
     console.error("Error fetching total students:", error);
     res.status(500).json({ message: "Server error" });
+  }
+}
+
+export const totalStudentsById = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const totalStudents = await Student.count({ where: { userId } });
+    res.status(200).json(totalStudents);
+  } catch (error) {
+    console.error(`Error fetching total students for user ID ${userId}:`, error);
+    res.status(500).json({ message: `Error fetching total students for user ID ${userId}` });
   }
 }
 

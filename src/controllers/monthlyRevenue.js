@@ -2,7 +2,7 @@ import { Op } from "sequelize";
 import Student from "../models/Student.js";
 
 export const getMonthlyRevenue = async (req, res) => {
-  const { month, year, paymentStatus } = req.query;
+  const { month, year, paymentStatus, userId } = req.query;
 
   if (!month || !year) {
     return res
@@ -15,6 +15,7 @@ export const getMonthlyRevenue = async (req, res) => {
     const endDate = new Date(year, month, 0);
 
     let whereClause = {
+      userId: userId,
       payment_date: {
         [Op.between]: [startDate, endDate],
       },
