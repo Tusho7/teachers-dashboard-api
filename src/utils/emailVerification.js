@@ -11,12 +11,19 @@ const sendVerificationEmail = async (email, verificationCode) => {
     },
   });
 
-
   const mailOptions = {
     from: process.env.EMAIL_USERNAME,
     to: email,
     subject: "Please verify your email",
-    text: `Your verification code is ${verificationCode}`,
+    html: `
+      <p>Thank you for signing up with our app.</p>
+      <p>Please verify your email by entering the following code:</p>
+      <h1 style="font-size: 24px; font-weight: bold;">${verificationCode}</h1>
+
+      <p>See you there!</p>
+<p>Best regards</p>
+
+    `,
   };
 
   try {
@@ -28,11 +35,10 @@ const sendVerificationEmail = async (email, verificationCode) => {
   }
 };
 
-
 export const sendEmail = async (to, subject, text) => {
   try {
     const transporter = nodemailer.createTransport({
-      service:  process.env.EMAIL_SERVICE,
+      service: process.env.EMAIL_SERVICE,
       auth: {
         user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PASSWORD,
