@@ -1,6 +1,11 @@
 import { WebSocketServer } from 'ws';
+import dotenv from 'dotenv';
 
-const wsServer = new WebSocketServer({ port: 8081 });
+dotenv.config();
+
+
+const port = process.env.WS_PORT || 8081;
+const wsServer = new WebSocketServer({ port });
 
 wsServer.on('connection', (ws) => {
   console.log('WebSocket client connected');
