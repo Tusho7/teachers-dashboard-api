@@ -68,11 +68,18 @@ src
 
 ```
 
-config: Contains configuration files such as database connection setup.
-controllers: Handles business logic, interacting with models and returning responses.
-middlewares: Includes middleware functions for handling requests before they reach the routes.
-models: Defines data models using Sequelize for interacting with PostgreSQL.
-routes: Defines API routes and their corresponding controller methods.
-utils: Utility functions used across the application.
-server.js: Entry point file that initializes and starts the Express server.
-Feel free to adjust the sections and details according to your specific project setup and requirements. This README template provides a clear structure and instructions for setting up and understanding your English Education API project.
+### Config: Contains configuration files such as database connection setup.
+
+### Controllers: Handles business logic, interacting with models and returning responses.
+
+### Middlewares: Includes middleware functions for handling requests before they reach the routes.
+
+### Models: Defines data models using Sequelize for interacting with PostgreSQL.
+
+### Routes: Defines API routes and their corresponding controller methods.
+
+### Utils: Utility functions used across the application.
+
+### Server.js: Entry point file that initializes and starts the Express server.
+
+Feel free to adjust the sections and details according to your specific project setup and requirements. This README template provides a clear structure and instructions for setting up and understanding your Teacher's Dashboard API project.
