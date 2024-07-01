@@ -304,6 +304,8 @@ export const update_student = async (req, res) => {
     days_of_week,
     hours_of_days,
     payment_date,
+    entrant_student,
+    from_abroad_student,
     currency
   } = req.body;
 
@@ -373,6 +375,11 @@ export const update_student = async (req, res) => {
 
     if (attendance_count !== undefined) {
       student.attendance_count = attendance_count;
+    }
+
+    if (entrant_student !== undefined && from_abroad_student !== undefined) {
+      student.entrant_student = entrant_student;
+      student.from_abroad_student = from_abroad_student;
     }
 
     wsServer.clients.forEach((client) => {
